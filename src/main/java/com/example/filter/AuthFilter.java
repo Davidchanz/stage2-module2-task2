@@ -17,10 +17,13 @@ public class AuthFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
-        req.getSession().getAttribute("user");
+        String user = (String) req.getSession().getAttribute("user");
 
-        servletRequest.getRequestDispatcher("/login.jsp").forward(servletRequest, servletResponse);
-        filterChain.doFilter(servletRequest, servletResponse);
+        if(user != null){
+            filterChain.doFilter(servletRequest, servletResponse);
+        }else {
+            servletRequest.getRequestDispatcher("/login.jsp").forward(servletRequest, servletResponse);
+        }
     }
 
     @Override
