@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebServlet("/login")
@@ -15,8 +16,8 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String user = (String) req.getSession(true).getAttribute("user");
-        if(user != null){
+        HttpSession session = req.getSession();
+        if(session != null && session.getAttribute("user") != null){
             resp.sendRedirect("/user/hello.jsp");
         }else {
             resp.sendRedirect("/login.jsp");
@@ -28,9 +29,9 @@ public class LoginServlet extends HttpServlet {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
 
-        if(Users.getInstance().getUsers().contains(login) &&
+        if(password != null && Users.getInstance().getUsers().contains(login) &&
         password.isEmpty()){
-            req.getSession(true).setAttribute("user", login);
+            req.getSession(true).setAttribute("user", "user");
             resp.sendRedirect("/user/hello.jsp");
         }else {
             resp.sendRedirect("/login.jsp");
